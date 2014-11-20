@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=Unicode" />
+        <title>XLS Gadget</title>
+        <style type="text/css">
+        body {
+            margin: 0;
+            width: 140px;
+            height: 75px;
+            font-family: verdana;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        #mySelect {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        #value {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        </style>
+        <script type="text/jscript" language="jscript">
+            // Initialize the gadget.
+            function init()
+            {
+                var oBackground = document.getElementById("imgBackground");
+                oBackground.src = "url(images/background.png)";
+            }
+		</script>
+    </head>
+    <body onload="init(); getValue()">
+        <g:background id="imgBackground">
+            <form>
+            	<select id="mySelect" onchange="getValue()" value="Test"></select>
+            	<div id="value"></div>
+            </form>
+        </g:background>
+        <script type="text/javascript">
+			var dropdown = document.getElementById("mySelect"); 
+            var options = new Array;
+            var values = new Array;
+
+            var excel = new ActiveXObject("Excel.Application");
+            var excel_file = excel.Workbooks.Open("C:/Program Files/Windows Sidebar/Gadgets/xls.gadget/tabel.xlsx");
+            var excel_sheet = excel.Worksheets("Sheet1");
+            
+            //The amount of used rows
+            var rows = excel_sheet.UsedRange.Rows.Count;
+
+            //Create arrays 
+            for(var i=2;i<=rows;i++){
+                var cellA = excel_sheet.Range("A"+i);
+                var cellB = excel_sheet.Range("B"+i);
+                options.push(cellA);
+                values.push(cellB.Value);
+            }
+
+            // Populate the dropdown
+			for (var i = 0; i < options.length; ++i) {
+				// Append the element to the end of Array list
+				dropdown[dropdown.length]= new Option(options[i], i);
+			};
+
+            getValue = function() {
+                var x = document.getElementById("mySelect").value;
+                document.getElementById("value").innerHTML = values[x];
+            };
+
+            excel.Application.Quit();
+        </script>
+    </body>
+</html>
